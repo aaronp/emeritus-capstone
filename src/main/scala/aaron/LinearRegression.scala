@@ -7,35 +7,6 @@ import scala.language.implicitConversions
  */
 object LinearRegression:
 
-  case class BestFit(a: Double, b: Double)
-
-  case class Point(x: Double, y: Double)
-
-  object Point:
-    implicit def fromTuple(xy: (Int, Int)): Point = Point(xy._1, xy._2)
-
-  def stdDev[N: Numeric](values: List[N]) =
-    import Numeric.Implicits._
-    val total = values.sum.toDouble
-    val mean = total / values.size.toDouble
-    val squares: Double = values.map(x => Math.pow(x.toDouble - mean, 2)).sum
-    Math.sqrt(squares / values.size)
-
-  def bestFit(points: List[Point]): BestFit =
-    val xs = points.map(_.x)
-    val ys = points.map(_.y)
-    val aveX = xs.sum / points.size
-    val aveY = points.map(_.y).sum / points.size
-    val num = points.map {
-      case Point(x, y) => (x - aveX) * (y - aveY)
-    }.sum
-
-    val denom = xs.map(x => (x - aveX) * (x - aveX)).sum
-
-    val a = num / denom
-    val b = aveY - (a * aveX)
-    BestFit(a, b)
-
   /**
    * the 'bias' or 'offset' is  (aveY - A * aveX)
    *
@@ -78,4 +49,32 @@ object LinearRegression:
 
     deviations / (xVariance * yVariance)
 
+  case class BestFit(a: Double, b: Double)
+
+  case class Point(x: Double, y: Double)
+
+  object Point:
+    implicit def fromTuple(xy: (Int, Int)): Point = Point(xy._1, xy._2)
+
+  def stdDev[N: Numeric](values: List[N]) =
+    import Numeric.Implicits._
+    val total = values.sum.toDouble
+    val mean = total / values.size.toDouble
+    val squares: Double = values.map(x => Math.pow(x.toDouble - mean, 2)).sum
+    Math.sqrt(squares / values.size)
+
+  def bestFit(points: List[Point]): BestFit =
+    val xs = points.map(_.x)
+    val ys = points.map(_.y)
+    val aveX = xs.sum / points.size
+    val aveY = points.map(_.y).sum / points.size
+    val num = points.map {
+      case Point(x, y) => (x - aveX) * (y - aveY)
+    }.sum
+
+    val denom = xs.map(x => (x - aveX) * (x - aveX)).sum
+
+    val a = num / denom
+    val b = aveY - (a * aveX)
+    BestFit(a, b)
 
